@@ -1,6 +1,21 @@
 @payoneer_net_backend_HostAddress = http://localhost:5245
 
-GET {{payoneer_net_backend_HostAddress}}/weatherforecast/
-Accept: application/json
+### Create a new order
+POST http://localhost:5245/api/Orders
+Content-Type: application/json
 
-###
+{
+  "orderId": "3fa85f64-5717-4562-b3fc-2c963f66afa2",
+  "customerName": "John Doe",
+  "items": [
+    {
+      "productId": "1fa85f64-5717-4562-b3fc-2c963f66afa3",
+      "quantity": 2
+    },
+    {
+      "productId": "2fa85f64-5717-4562-b3fc-2c963f66afa4",
+      "quantity": 1
+    }
+  ],
+  "createdAt": "2025-06-14T12:00:00Z"
+}
