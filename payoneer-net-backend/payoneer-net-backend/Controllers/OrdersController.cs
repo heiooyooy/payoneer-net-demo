@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using payoneer_net_backend.DbContexts;
+using payoneer_net_backend.Interfaces;
 using payoneer_net_backend.Models;
 
 namespace payoneer_net_backend.Controllers;
@@ -9,12 +10,12 @@ namespace payoneer_net_backend.Controllers;
 [ApiController]
 public class OrdersController : ControllerBase
 {
-    private readonly OrderDbContext _context;
+    private readonly IOrderRepository _repository;
     private readonly ILogger<OrdersController> _logger;
 
-    public OrdersController(OrderDbContext context, ILogger<OrdersController> logger)
+    public OrdersController(IOrderRepository repository, ILogger<OrdersController> logger)
     {
-        _context = context;
+        _repository = repository;
         _logger = logger;
     }
 
@@ -39,59 +40,56 @@ public class OrdersController : ControllerBase
             }).ToList()
         };
 
-        _context.Orders.Add(order);
-        await _context.SaveChangesAsync();
+        var createdOrder = await _repository.CreateOrderAsync(order);
+        _logger.LogInformation("Successfully created order with ID: {OrderId}", createdOrder.OrderId);
 
-        return CreatedAtAction(nameof(GetOrder), new { id = order.OrderId }, new { order.OrderId });
+        return CreatedAtAction(nameof(GetOrder), new { id = createdOrder.OrderId }, new { createdOrder.OrderId });
     }
     
     [HttpGet]
     public async Task<ActionResult<IEnumerable<OrderDto>>> GetOrders()
     {
         _logger.LogInformation("Getting all orders");
-        var orders = await _context.Orders
-            .Include(o => o.Items) 
-            .Select(o => new OrderDto // Project to DTO
+        var orders = await _repository.GetAllOrdersAsync();
+        var orderDtos = orders.Select(o => new OrderDto // Project to DTO
+        {
+            OrderId = o.OrderId,
+            CustomerName = o.CustomerName,
+            CreatedAt = o.CreatedAt,
+            Items = o.Items.Select(i => new OrderItemDto
             {
-                OrderId = o.OrderId,
-                CustomerName = o.CustomerName,
-                CreatedAt = o.CreatedAt,
-                Items = o.Items.Select(i => new OrderItemDto
-                {
-                    ProductId = i.ProductId,
-                    Quantity = i.Quantity
-                }).ToList()
-            })
-            .ToListAsync();
+                ProductId = i.ProductId,
+                Quantity = i.Quantity
+            }).ToList()
+        });
 
-        return Ok(orders);
+        return Ok(orderDtos);
     }
     
     [HttpGet("{id}")]
     public async Task<ActionResult<OrderDto>> GetOrder(Guid id)
     {
         _logger.LogInformation("Getting order with ID: {OrderId}", id);
-        var order = await _context.Orders
-            .Include(o => o.Items)
-            .Where(o => o.OrderId == id)
-            .Select(o => new OrderDto
-            {
-                OrderId = o.OrderId,
-                CustomerName = o.CustomerName,
-                CreatedAt = o.CreatedAt,
-                Items = o.Items.Select(i => new OrderItemDto
-                {
-                    ProductId = i.ProductId,
-                    Quantity = i.Quantity
-                }).ToList()
-            })
-            .FirstOrDefaultAsync();
+        var order = await _repository.GetOrderByIdAsync(id);
 
         if (order == null)
         {
+            _logger.LogWarning("Order with ID: {OrderId} not found.", id);
             return NotFound();
         }
+        
+        var orderDto = new OrderDto()
+        {
+            OrderId = order.OrderId,
+            CustomerName = order.CustomerName,
+            CreatedAt = order.CreatedAt,
+            Items = order.Items.Select(i => new OrderItemDto
+            {
+                ProductId = i.ProductId,
+                Quantity = i.Quantity
+            }).ToList()
+        };
 
-        return Ok(order);
+        return Ok(orderDto);
     }
 }

@@ -1,13 +1,16 @@
 using payoneer_net_backend.DbContexts;
 using Microsoft.EntityFrameworkCore;
+using payoneer_net_backend.Interfaces;
 using payoneer_net_backend.Middleware;
+using payoneer_net_backend.Repositories;
 
 namespace payoneer_net_backend.Extensions;
 
 public static class ServiceExtensions
 {
-    public static IServiceCollection AddCustomServices(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddCustomServices(this IServiceCollection services)
     {
+        services.AddScoped<IOrderRepository, OrderRepository>();
         return services;
     }
 

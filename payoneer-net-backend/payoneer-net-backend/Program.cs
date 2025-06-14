@@ -11,12 +11,13 @@ builder.Services.AddSwaggerGen();
 builder.Host.UseSerilog((context, config) => { config.ReadFrom.Configuration(context.Configuration); });
 builder.Services.AddControllers();
 
+builder.Services.AddCustomServices();
 // var connectionString = builder.Configuration.GetConnectionString("PostgresConnection");
-
 // use Sqlite for simplicity
 builder.Services.AddDbContext<OrderDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"))
 );
+builder.Services.AddCustomServices();
 
 var app = builder.Build();
 
