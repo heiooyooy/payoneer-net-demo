@@ -1,0 +1,10 @@
+﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=44007501_002D7928_002D4bc8_002D93a8_002D322b531eb754/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="OrdersControllerTests" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
+  &lt;TestAncestor&gt;
+    &lt;TestId&gt;xUnit::CDDE4182-3811-469F-A2CC-422FFCFBA58A::net8.0::UnitTests.OrdersControllerTests&lt;/TestId&gt;
+    &lt;TestId&gt;xUnit::21AE1BC5-2DE7-4C9E-AF24-B5709722B41D::net8.0::IntegrationTests.OrdersEndpointsTests.PostOrder_ThenGetOrder_ReturnsCorrectOrder&lt;/TestId&gt;
+    &lt;TestId&gt;xUnit::21AE1BC5-2DE7-4C9E-AF24-B5709722B41D::net8.0::IntegrationTests.OrdersEndpointsTests&lt;/TestId&gt;
+    &lt;TestId&gt;xUnit::21AE1BC5-2DE7-4C9E-AF24-B5709722B41D::net8.0::IntegrationTests.OrderControllerIntegrationTests.PostOrder_ThenGetOrder_ReturnsCorrectOrder&lt;/TestId&gt;
+    &lt;TestId&gt;xUnit::21AE1BC5-2DE7-4C9E-AF24-B5709722B41D::net8.0::IntegrationTests.OrderControllerIntegrationTests&lt;/TestId&gt;
+  &lt;/TestAncestor&gt;
+&lt;/SessionState&gt;</s:String></wpf:ResourceDictionary>
