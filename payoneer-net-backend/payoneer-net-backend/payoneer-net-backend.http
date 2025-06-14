@@ -1,0 +1,6 @@
+@payoneer_net_backend_HostAddress = http://localhost:5245
+
+GET {{payoneer_net_backend_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

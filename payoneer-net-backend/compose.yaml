@@ -1,0 +1,7 @@
+﻿services:
+  payoneer-net-backend:
+    image: payoneer-net-backend
+    build:
+      context: .
+      dockerfile: payoneer-net-backend/Dockerfile
+
