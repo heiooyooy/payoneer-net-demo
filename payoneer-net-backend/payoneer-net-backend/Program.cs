@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using payoneer_net_backend.DbContexts;
+using payoneer_net_backend.Extensions;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,7 +13,7 @@ builder.Services.AddControllers();
 
 // var connectionString = builder.Configuration.GetConnectionString("PostgresConnection");
 
-// use Sqlite for simplication
+// use Sqlite for simplicity
 builder.Services.AddDbContext<OrderDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"))
 );
@@ -25,21 +26,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-using (var scope = app.Services.CreateScope())
-{
-    var services = scope.ServiceProvider;
-    try
-    {
-        var context = services.GetRequiredService<OrderDbContext>();
-        context.Database.Migrate();
-    }
-    catch (Exception ex)
-    {
-        var logger = services.GetRequiredService<ILogger<Program>>();
-        logger.LogError(ex, "An error occurred while migrating or seeding the database.");
-    }
-}
-
+app.MigrateAndSeedData();
+app.AddCustomMiddleware();
 app.MapControllers();
 
 // no need to use Https for demo purpose

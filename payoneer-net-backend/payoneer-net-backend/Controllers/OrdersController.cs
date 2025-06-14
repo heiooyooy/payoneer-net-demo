@@ -21,12 +21,12 @@ public class OrdersController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> CreateOrder([FromBody] CreateOrderRequest request)
     {
-        _logger.LogInformation("*** Creating Order ***");
         if (!ModelState.IsValid)
         {
             return BadRequest(ModelState);
         }
 
+        _logger.LogInformation("Creating a new order with ID: {OrderId}", request.OrderId);
         var order = new Order
         {
             OrderId = request.OrderId,
@@ -48,6 +48,7 @@ public class OrdersController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<IEnumerable<OrderDto>>> GetOrders()
     {
+        _logger.LogInformation("Getting all orders");
         var orders = await _context.Orders
             .Include(o => o.Items) 
             .Select(o => new OrderDto // Project to DTO
@@ -69,6 +70,7 @@ public class OrdersController : ControllerBase
     [HttpGet("{id}")]
     public async Task<ActionResult<OrderDto>> GetOrder(Guid id)
     {
+        _logger.LogInformation("Getting order with ID: {OrderId}", id);
         var order = await _context.Orders
             .Include(o => o.Items)
             .Where(o => o.OrderId == id)
